@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+# SQLite database added as well
 from scapy.all import *
 import argparse
 import logging
@@ -27,6 +28,8 @@ import struct
 import re
 import requests
 from functools import lru_cache
+
+# Cython for core functions -- support
 try:
     import cython
     USE_CYTHON = True
@@ -201,6 +204,7 @@ def chk_r(ip):
         total = sum(count for ts, count in r_lm[ip].items() if now - ts <= r_wn)
         return total > r_th
 
+# LRU caching -> domain lookups
 @lru_cache(maxsize=1024)
 def is_domain_blocked(domain):
     for blocked in dns_bk:
@@ -614,6 +618,7 @@ class H(BaseHTTPRequestHandler):
             self.send_response(404)
             self.end_headers()
 
+# Ssl and TLS for certificate generation
 def start_w(port):
     handler_class = H
     server_class = socketserver.ThreadingTCPServer
@@ -744,6 +749,7 @@ def scheduled_report():
         
         time.sleep(60)
 
+# Optimizes performance
 def optimize():
     if USE_CYTHON:
         try:
